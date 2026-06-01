@@ -1,251 +1,125 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BookVerse - Advanced Store Pro</title><style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#f5f7fb;
-}
+<title>BookVerse Final</title>
 
+<style>
+body{margin:0;font-family:Arial;background:#eaeded}
+
+/* HEADER */
 header{
-    background:#111827;
-    color:white;
-    padding:15px 6%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
+background:#131921;color:white;
+display:flex;justify-content:space-between;
+padding:10px;
+position:sticky;top:0;
 }
 
-.logo{
-    font-size:22px;
-    font-weight:bold;
+.search input{
+padding:7px;border:none;border-radius:4px;
 }
 
-.search-box input{
-    padding:10px;
-    width:220px;
-    border-radius:6px;
-    border:none;
-    outline:none;
+/* GRID */
+.container{padding:15px}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
 }
 
-.hero{
-    text-align:center;
-    padding:40px 20px;
-    background:linear-gradient(135deg,#1f2937,#374151);
-    color:white;
+@media(min-width:768px){
+.grid{grid-template-columns:repeat(4,1fr)}
 }
 
-.container{
-    width:90%;
-    max-width:1200px;
-    margin:auto;
+/* CARD */
+.card{
+background:white;
+border-radius:10px;
+padding:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+position:relative;
 }
 
-.section-title{
-    margin:20px 0;
-}
-
-.books{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:20px;
-    padding:20px 0;
-}
-
-.book{
-    background:white;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-    position:relative;
-}
-
-.book img{
-    width:100%;
-    height:280px;
-    object-fit:cover;
-}
-
-.book-content{
-    padding:12px;
-}
-
-.price{
-    color:green;
-    font-weight:bold;
-    margin:6px 0;
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
 }
 
 .btn{
-    display:block;
-    text-align:center;
-    background:#f59e0b;
-    color:white;
-    padding:10px;
-    border-radius:6px;
-    text-decoration:none;
-    font-weight:bold;
+background:#ff9900;
+padding:8px;
+margin-top:5px;
+text-align:center;
+border-radius:20px;
+cursor:pointer;
 }
 
-.btn:hover{background:#d97706;}
+.icon{
+position:absolute;
+top:8px;
+right:8px;
+cursor:pointer;
+}
+</style>
+</head>
 
-.heart{
-    position:absolute;
-    top:10px;
-    right:10px;
-    cursor:pointer;
-    font-size:20px;
-}
+<body>
 
-.star{
-    cursor:pointer;
-    color:#ccc;
-    font-size:18px;
-}
+<header>
+<div>📚 BookVerse</div>
+<div class="search">
+<input id="search" placeholder="Search books...">
+</div>
+</header>
 
-.star.active{
-    color:gold;
-}
+<div class="container">
+<div class="grid" id="list"></div>
+</div>
 
-.admin{
-    background:#fff;
-    padding:15px;
-    margin:20px 0;
-    border-radius:10px;
-}
+<script>
 
-input,button{
-    padding:8px;
-    margin:5px;
-}
-
-.trending{
-    background:#fff;
-    padding:10px;
-    border-radius:10px;
-    margin:10px 0;
-}
-</style></head><body><header>
-    <div class="logo">📚 BookVerse Pro</div>
-    <div class="search-box">
-        <input type="text" id="search" placeholder="Search books...">
-    </div>
-</header><div class="hero">
-    <h1>Smart Book Store</h1>
-    <p>Search • Rate • Save • Buy</p>
-</div><div class="container"><div class="trending">
-    <h3>🔥 Trending Books</h3>
-    <div id="trendingList"></div>
-</div><div class="admin">
-    <h3>📊 Admin Panel (Add Book)</h3>
-    <input id="bname" placeholder="Book Name">
-    <input id="blink" placeholder="Amazon Link">
-    <button onclick="addBook()">Add</button>
-</div><h2 class="section-title">Books</h2><div class="books" id="bookList"></div></div><script>
-let books = JSON.parse(localStorage.getItem('books')) || [
-{
-    id:1,
-    name:"Rich Dad Poor Dad",
-    img:"https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800",
-    price:"₹299",
-    link:"https://www.amazon.in",
-    clicks:0,
-    rating:0,
-    wish:false
-},
-{
-    id:2,
-    name:"Atomic Habits",
-    img:"https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800",
-    price:"₹399",
-    link:"https://www.amazon.in",
-    clicks:0,
-    rating:0,
-    wish:false
-}
+let books=[
+{name:"Atomic Habits",price:399,img:"https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800"},
+{name:"Rich Dad Poor Dad",price:299,img:"https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800"},
+{name:"Psychology of Money",price:349,img:"https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800"},
+{name:"Deep Work",price:399,img:"https://images.unsplash.com/photo-1455885666463-1b3d6c1d7c8d?w=800"}
 ];
 
-function save(){
-localStorage.setItem('books',JSON.stringify(books));
-}
-
 function render(){
-let list=document.getElementById('bookList');
+let list=document.getElementById("list");
 list.innerHTML="";
 
-books.forEach(b=>{
+books.forEach((b,i)=>{
 list.innerHTML+=`
-<div class='book'>
-<div class='heart' onclick='toggleWish(${b.id})'>${b.wish?'❤️':'🤍'}</div>
-<img src='${b.img}'>
-<div class='book-content'>
-<h3>${b.name}</h3>
-<div>
-${[1,2,3,4,5].map(i=>
-`<span class='star ${i<=b.rating?'active':''}' onclick='rate(${b.id},${i})'>★</span>`
-).join('')}
+<div class="card">
+<div class="icon" onclick="alert('Added to wishlist')">🤍</div>
+<img src="${b.img}">
+<h4>${b.name}</h4>
+<p>₹${b.price}</p>
+<div class="btn" onclick="alert('Added to cart')">Add to Cart</div>
 </div>
-<div class='price'>${b.price}</div>
-<a class='btn' href='${b.link}?ref=bookverse' target='_blank' onclick='track(${b.id})'>Buy Now</a>
-</div>
-</div>`;
+`;
 });
-
-renderTrending();
 }
 
-function rate(id,val){
-books=books.map(b=>b.id===id?{...b,rating:val}:b);
-save();render();
-}
-
-function toggleWish(id){
-books=books.map(b=>b.id===id?{...b,wish:!b.wish}:b);
-save();render();
-}
-
-function track(id){
-books=books.map(b=>b.id===id?{...b,clicks:b.clicks+1}:b);
-save();render();
-}
-
-function renderTrending(){
-let t=document.getElementById('trendingList');
-let top=[...books].sort((a,b)=>b.clicks-a.clicks).slice(0,3);
-t.innerHTML=top.map(b=>`<div>🔥 ${b.name}</div>`).join('');
-}
-
-function addBook(){
-let name=document.getElementById('bname').value;
-let link=document.getElementById('blink').value;
-if(!name||!link)return;
-books.push({
-id:Date.now(),
-name:name,
-img:"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
-price:"₹299",
-link:link,
-clicks:0,
-rating:0,
-wish:false
-});
-save();render();
-}
-
-let search=document.getElementById('search');
-search.addEventListener('input',function(){
+document.getElementById("search").addEventListener("input",function(){
 let v=this.value.toLowerCase();
-let cards=document.querySelectorAll('.book');
-cards.forEach((c,i)=>{
-if(books[i].name.toLowerCase().includes(v))c.style.display="block";
-else c.style.display="none";
+
+document.querySelectorAll(".card").forEach((c,i)=>{
+if(books[i].name.toLowerCase().includes(v)){
+c.style.display="block";
+}else{
+c.style.display="none";
+}
 });
 });
 
 render();
-</script></body>
+
+</script>
+
+</body>
 </html>
